@@ -23,6 +23,26 @@ MAXClient.factory('ApiInfo', ['$resource', 'MAXInfo', function($resource, MAXInf
     });
 }]);
 
+MAXClient.factory('ContextActivities', ['$http', 'MAXInfo', function($http, MAXInfo) {
+    // Head requests should be used with $http, as the values are in headers.
+    var self = this;
+    self.get_count = function(hash) {
+        return $http.head(MAXInfo.max_server+'/contexts/' + hash + '/activities',
+                      {headers:MAXInfo.headers});
+    };
+    return self;
+}]);
+
+MAXClient.factory('UserActivities', ['$http', 'MAXInfo', function($http, MAXInfo) {
+    // Head requests should be used with $http, as the values are in headers.
+    var self = this;
+    self.get_count = function(username) {
+        return $http.head(MAXInfo.max_server+'/people/' + username + '/activities',
+                      {headers:MAXInfo.headers});
+    };
+    return self;
+}]);
+
 MAXClient.factory('MAXInfo', ['MAXSession', '_MAXUI', function(MAXSession, _MAXUI) {
     var maxinfo = {};
     if (_MAXUI) {
