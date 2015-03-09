@@ -43,6 +43,48 @@ MAXClient.factory('UserActivities', ['$http', 'MAXInfo', function($http, MAXInfo
     return self;
 }]);
 
+MAXClient.factory('TimelineLastAuthors', ['$resource', 'MAXInfo', function($resource, MAXInfo) {
+    return $resource(MAXInfo.max_server+'/people/:username/timeline/authors', null, {
+        query: {method:'GET', params: {limit:'@limit'}, headers:MAXInfo.headers, isArray: true},
+    });
+}]);
+
+MAXClient.factory('ContextLastAuthors', ['$resource', 'MAXInfo', function($resource, MAXInfo) {
+    return $resource(MAXInfo.max_server+'/contexts/:hash/activities/authors', null, {
+        query: {method:'GET', params: {limit:'@limit'}, headers:MAXInfo.headers, isArray: true},
+    });
+}]);
+
+MAXClient.factory('UsersComments', ['$http', 'MAXInfo', function($http, MAXInfo) {
+    // Head requests should be used with $http, as the values are in headers.
+    var self = this;
+    self.get_count = function(context_hash) {
+        return $http.head(MAXInfo.max_server+'/contexts/' + context_hash + '/comments',
+                      {headers:MAXInfo.headers});
+    };
+    return self;
+}]);
+
+MAXClient.factory('AllActivities', ['$http', 'MAXInfo', function($http, MAXInfo) {
+    // Head requests should be used with $http, as the values are in headers.
+    var self = this;
+    self.get_count = function() {
+        return $http.head(MAXInfo.max_server+'/activities',
+                      {headers:MAXInfo.headers});
+    };
+    return self;
+}]);
+
+MAXClient.factory('AllComments', ['$http', 'MAXInfo', function($http, MAXInfo) {
+    // Head requests should be used with $http, as the values are in headers.
+    var self = this;
+    self.get_count = function() {
+        return $http.head(MAXInfo.max_server+'/activities/comments',
+                      {headers:MAXInfo.headers});
+    };
+    return self;
+}]);
+
 MAXClient.factory('MAXInfo', ['MAXSession', '_MAXUI', function(MAXSession, _MAXUI) {
     var maxinfo = {};
     if (_MAXUI) {
@@ -50,11 +92,13 @@ MAXClient.factory('MAXInfo', ['MAXSession', '_MAXUI', function(MAXSession, _MAXU
                            'X-Oauth-Token': _MAXUI.oauth_token,
                            'X-Oauth-Scope': 'widgetcli'};
         maxinfo.max_server = _MAXUI.max_server;
+        maxinfo.username = _MAXUI.username;
     } else {
         maxinfo.headers = {'X-Oauth-Username': MAXSession.username,
                            'X-Oauth-Token': MAXSession.oauth_token,
                            'X-Oauth-Scope': 'widgetcli'};
         maxinfo.max_server = MAXSession.max_server;
+        maxinfo.username = MAXSession.username;
     }
     return maxinfo;
 }]);
