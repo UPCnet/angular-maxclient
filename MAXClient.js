@@ -120,10 +120,10 @@ MAXClient.factory('_MAXUI', [function() {
 MAXClient.directive('oauthinfo', [function() {
     return {
         restrict: 'E',
-        controller: function($scope, $element, $attrs, MAXSession) {
+        controller: ['$scope', '$element', '$attrs', 'MAXSession', function($scope, $element, $attrs, MAXSession) {
             MAXSession.username = $attrs.username;
             MAXSession.oauth_token = $attrs.oauthToken;
             MAXSession.max_server = $attrs.maxServer;
-        }
+        }]
     };
 }]);
