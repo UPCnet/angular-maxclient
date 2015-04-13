@@ -85,6 +85,12 @@ MAXClient.factory('AllComments', ['$http', 'MAXInfo', function($http, MAXInfo) {
     return self;
 }]);
 
+MAXClient.factory('UserSubscriptions', ['$resource', 'MAXInfo', function($resource, MAXInfo) {
+    return $resource(MAXInfo.max_server+'/people/:username/subscriptions', null, {
+        query: {method:'GET', params: {limit:'@limit', tags:'@tags'}, headers:MAXInfo.headers, isArray: true},
+    });
+}]);
+
 MAXClient.factory('MAXInfo', ['MAXSession', '_MAXUI', function(MAXSession, _MAXUI) {
     var maxinfo = {};
     if (_MAXUI) {
